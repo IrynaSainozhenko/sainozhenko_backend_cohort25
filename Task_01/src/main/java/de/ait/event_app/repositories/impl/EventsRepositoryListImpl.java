@@ -18,7 +18,7 @@ public class EventsRepositoryListImpl implements EventsRepository {
 
     @Override
     public List<Event> findAll() {
-        return null;
+        return new ArrayList<>(events);
     }
 
     @Override
@@ -32,11 +32,17 @@ public class EventsRepositoryListImpl implements EventsRepository {
 
     @Override
     public void update(Event model) {
-
     }
 
     @Override
     public void deleteById(Long id) {
+    }
 
+    @Override
+    public Event findOneByTitle(String title) {
+        return events.stream()
+                .filter(user -> user.getTitle().equals(title))
+                .findFirst()
+                .orElse(null);
     }
 }

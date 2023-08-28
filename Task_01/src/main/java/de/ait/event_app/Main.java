@@ -18,15 +18,18 @@ public class Main {
         EventsServiceImpl eventsService = new EventsServiceImpl(eventsRepositoryFile);
         EventsController eventsController = new EventsController(scanner, eventsService);
 
-        while (true) {
+        boolean isRun = true;
+
+        while (isRun) {
             String command = scanner.nextLine();
-            if (command.equals("/addEvent")) {
-                eventsController.addEvent();
-            } else if (command.equals("/exit")) {
-                break;
+
+            switch (command) {
+                case "/addEvent" ->
+                        eventsController.addEvent();
+                case "/events" ->
+                        eventsController.getAllEvents();
+                case "/exit" -> isRun = false;
             }
         }
-
-
     }
 }

@@ -3,10 +3,11 @@ package de.ait.event_app.repositories.impl;
 import de.ait.event_app.models.Event;
 import de.ait.event_app.repositories.EventsRepository;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class EventsRepositoryFileImpl implements EventsRepository {
 
@@ -18,6 +19,7 @@ public class EventsRepositoryFileImpl implements EventsRepository {
         this.fileName = fileName;
     }
 
+
     @Override
     public Event findById(Long id) {
         return null;
@@ -25,7 +27,15 @@ public class EventsRepositoryFileImpl implements EventsRepository {
 
     @Override
     public List<Event> findAll() {
-        return null;
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+
+            return reader.lines()
+                    .map(line -> line.split("\\|"))
+                    .map(parsed -> new Event(Long.parseLong(parsed[0]), parsed[1], LocalDate.parse(parsed[2]), LocalDate.parse(parsed[3])))
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Problems with reading from file: " + e.getMessage());
+        }
     }
 
     @Override
@@ -53,6 +63,10 @@ public class EventsRepositoryFileImpl implements EventsRepository {
 
     @Override
     public void deleteById(Long id) {
+    }
 
+    @Override
+    public Event findOneByTitle(String title) {
+        return null;
     }
 }
